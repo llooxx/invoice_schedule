@@ -1,0 +1,6 @@
+pip install nuitka zstandard
+
+python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=pyside6 --follow-import-to=need --windows-icon-from-ico="img/invoice.ico" --include-data-dir="D:/发票/img=img" --output-dir=D:\ main.py
+
+
+python -m nuitka --windows-console-mode=disable --enable-plugin=pyside6 --follow-import-to=need --macos-create-app-bundle --macos-app-icon="img/invoice.icns" --include-data-dir="./img=img" --output-dir="./" --run main.py
