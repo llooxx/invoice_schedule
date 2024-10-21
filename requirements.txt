@@ -1,0 +1,8 @@
+pdfminer.six==20231228
+pdfplumber==0.11.4
+Pillow==11.0.0
+PySide6==6.8.0.1
+PySide6==6.8.0.1
+PySide6_Addons==6.8.0.1
+PySide6_Essentials==6.8.0.1
+pyzbar==0.1.9
