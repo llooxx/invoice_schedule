@@ -31,6 +31,17 @@ zh_type = {
     "chongdianzhuang": "充电桩电费",
 }
 
+invoice_store: dict[str, Invoice] = {}
+
+
+def store_get_invoice(file_path: str) -> Invoice | None:
+    if file_path in invoice_store.keys():
+        invoice = invoice_store[file_path]
+    else:
+        invoice = readPDF(file_path)
+        invoice_store[file_path] = invoice
+    return invoice
+
 
 class CustomWidgetItem(QWidget):
     def __init__(self, text: str):
@@ -98,10 +109,10 @@ class MyWidget(QMainWindow):
             },
         }
         # 列表item单击解析
-        self.all_listWidget["qiyou"].itemClicked.connect(lambda item: self.handleClickedItem(item, "qiyou"))
-        self.all_listWidget["shineijiaotong"].itemClicked.connect(lambda item: self.handleClickedItem(item, "shineijiaotong"))
-        self.all_listWidget["chongdianzhuang"].itemClicked.connect(lambda item: self.handleClickedItem(item, "chongdianzhuang"))
-        self.all_listWidget["tongxun"].itemClicked.connect(lambda item: self.handleClickedItem(item, "tongxun"))
+        self.all_listWidget["qiyou"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "qiyou"))
+        self.all_listWidget["shineijiaotong"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "shineijiaotong"))
+        self.all_listWidget["chongdianzhuang"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "chongdianzhuang"))
+        self.all_listWidget["tongxun"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "tongxun"))
         # 列表item双击删除
         self.all_listWidget["qiyou"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "qiyou"))
         self.all_listWidget["shineijiaotong"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "shineijiaotong"))
@@ -154,7 +165,7 @@ class MyWidget(QMainWindow):
         self.ui.lineEdit_company.clear()
         self.ui.lineEdit_taxpayer_id.clear()
         file_path = item.data(Qt.ItemDataRole.UserRole)
-        invoice = readPDF(file_path)
+        invoice = store_get_invoice(file_path)
         if invoice is not None:
             self.ui.lineEdit_code.setText(invoice.code if invoice.code is not None else "")
             self.ui.lineEdit_check.setText(invoice.check if invoice.check is not None else "")
@@ -240,7 +251,7 @@ class MyWidget(QMainWindow):
                 for i in range(choose_listWidget.count()):
                     item = choose_listWidget.item(i)
                     file_path = item.data(Qt.ItemDataRole.UserRole)
-                    invoice = readPDF(file_path)
+                    invoice = store_get_invoice(file_path)
                     if invoice is not None:
                         self.ui.textEdit_show.append(f"文件路径：{file_path}\n")
                         self.ui.textEdit_show.append(f"{invoice}\n")
