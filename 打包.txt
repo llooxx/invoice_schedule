@@ -1,6 +1,5 @@
 pip install nuitka zstandard
 
-python -m nuitka --onefile --windows-console-mode=disable --enable-plugin=pyside6 --follow-import-to=need --windows-icon-from-ico="img/invoice.ico" --include-data-dir="D:/发票/img=img" --output-dir=D:\ main.py
-
+python -m nuitka --onefile --windows-console-mode=disable --upx-binary="./upx-4.2.4-win64/upx.exe" --enable-plugin=pyside6,upx --windows-icon-from-ico="img/invoice.ico" --include-data-dir="img=img" --include-data-dir="pdfminer=pdfminer" --noinclude-unittest-mode=nofollow --include-package-data="pdfminer:cmap=*" --lto=yes --output-dir="./" main.py
 
 python -m nuitka --windows-console-mode=disable --enable-plugin=pyside6 --follow-import-to=need --macos-create-app-bundle --macos-app-icon="img/invoice.icns" --include-data-dir="./img=img" --output-dir="./" --run main.py
