@@ -28,9 +28,6 @@ class Invoice:
     taxpayer_id = None  # 纳税人识别号
 
     def __init__(self, qrcode: str, page_text: str):
-        # 从page_text中解析大写中文，即zh_daxie里的中文
-        daxie_price = re.search(r"[⊗零壹贰叁肆伍陆柒捌玖拾佰仟萬亿圆角分正整]{2,}", page_text).group()
-        daxie_price = "{:.2f}".format(rmbTrans.trans(daxie_price))
         # 二维码
         res: list[str] = [e.strip() for e in qrcode.split(",")]
         self.type = res[1] + (invoice_types[res[1]] if res[1] in invoice_types else "增值税普通电子发票")
@@ -56,8 +53,12 @@ class Invoice:
         # 金额
         prices = [e.replace("¥", "").replace("（小写）", "") for e in words if e.startswith("¥")]
         prices = [e for e in prices if e]
+        # 从page_text中解析大写中文，即zh_daxie里的中文
+        daxie_price = re.search(r"[⊗零壹贰叁肆伍陆柒捌玖拾佰仟萬亿圆角分正整]{2,}", page_text).group()
+        daxie_price = "{:.2f}".format(rmbTrans.trans(daxie_price))
         # prices去重
         prices.append(str(self.amount))
+        prices.append(daxie_price)
         prices = list(set(prices))
         if len(prices) == 3 or len(prices) == 2:
             self.tax = prices[0]
