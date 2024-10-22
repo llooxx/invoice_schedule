@@ -7,6 +7,7 @@ from invoice import *
 import webbrowser
 import csv
 from urllib.parse import urlparse
+
 # 任何一个PySide界面程序都需要使用QApplication
 # 我们要展示一个普通的窗口，所以需要导入QWidget，用来让我们自己的类继承
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QListWidgetItem, QFileDialog
@@ -19,16 +20,8 @@ import sys
 import os
 
 
-# def resource_path(relative_path):
-#     """获取资源文件的绝对路径，兼容开发和编译后的环境"""
-#     if getattr(sys, "frozen", False):
-#         # 在编译后的环境中
-#         base_path = sys._MEIPASS  # Nuitka有类似的属性，如 sys.frozen
-#     else:
-#         # 在开发环境中
-#         base_path = os.path.abspath(".")
-
-#     return os.path.join(base_path, relative_path)
+def resource_path(relative_path):
+    return os.path.join(os.path.dirname(__file__), relative_path)
 
 
 zh_type = {
@@ -65,7 +58,6 @@ class MyWidget(QMainWindow):
         myLabel.setText("作者：乱想乱想 E-mail:965035290@qq.com")
         self.ui.statusbar.addWidget(myLabel)
 
-
         self.ui.groupBox_qiyou.setAcceptDrops(True)
         self.ui.groupBox_shineijiaotong.setAcceptDrops(True)
         self.ui.groupBox_chongdianzhuang.setAcceptDrops(True)
@@ -90,6 +82,7 @@ class MyWidget(QMainWindow):
         self.ui.lineEdit_total.setReadOnly(True)
         self.ui.lineEdit_shuilv.setReadOnly(True)
         self.ui.lineEdit_type.setReadOnly(True)
+        self.ui.lineEdit_company.setReadOnly(True)
 
         self.all_listWidget = {
             "qiyou": self.ui.listWidget_qiyou,
@@ -138,6 +131,7 @@ class MyWidget(QMainWindow):
         self.ui.btn_total.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_total.text()))
         self.ui.btn_shuilv.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_shuilv.text()))
         self.ui.btn_type.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_type.text()))
+        self.ui.btn_company.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_company.text()))
         self.ui.btn_add_qiyou.clicked.connect(lambda: self.btn_add_clicked("qiyou"))
         self.ui.btn_add_shineijiaotong.clicked.connect(lambda: self.btn_add_clicked("shineijiaotong"))
         self.ui.btn_add_chongdianzhuang.clicked.connect(lambda: self.btn_add_clicked("chongdianzhuang"))
@@ -166,6 +160,7 @@ class MyWidget(QMainWindow):
         self.ui.lineEdit_total.clear()
         self.ui.lineEdit_shuilv.clear()
         self.ui.lineEdit_type.clear()
+        self.ui.lineEdit_company.clear()
         file_path = item.data(Qt.ItemDataRole.UserRole)
         invoice = readPDF(file_path)
         if invoice is not None:
@@ -176,8 +171,9 @@ class MyWidget(QMainWindow):
             self.ui.lineEdit_price.setText(invoice.price if invoice.price is not None else "")
             self.ui.lineEdit_tax.setText(invoice.tax if invoice.tax is not None else "")
             self.ui.lineEdit_total.setText(invoice.total if invoice.total is not None else "")
-            self.ui.lineEdit_shuilv.setText(str(invoice.max_shuilv) if invoice.max_shuilv is not None else "")
+            self.ui.lineEdit_shuilv.setText(f"{invoice.max_shuilv}%" if invoice.max_shuilv is not None else "")
             self.ui.lineEdit_type.setText(invoice.type if invoice.type is not None else "")
+            self.ui.lineEdit_company.setText(invoice.company if invoice.company is not None else "")
 
             self.ui.textEdit_show.clear()
             self.ui.textEdit_show.append(f"文件路径：{file_path}\n")
@@ -232,7 +228,19 @@ class MyWidget(QMainWindow):
             manifest_csv = csv.writer(
                 manifest,
             )
-            manifest_csv.writerow(["发票介质", "发票日期", "发票代码", "发票号码", "占用票额（发票票面全额）", "税率", "占用税额", "电子发票对应清单序号"])
+            manifest_csv.writerow(
+                [
+                    "税票类型",
+                    "发票代码",
+                    "发票号码",
+                    "发票日期",
+                    "销方名称",
+                    "金额",
+                    "税额",
+                    "税率",
+                    "电子发票对应清单序号",
+                ]
+            )
 
             for type in self.all_listWidget.keys():
                 choose_listWidget = self.all_listWidget[type]
@@ -245,7 +253,19 @@ class MyWidget(QMainWindow):
                         self.ui.textEdit_show.append(f"{invoice}\n")
                         output_path: Path = copy_file(invoice, Path(file_path), Path(folder_path), type)
 
-                        manifest_csv.writerow([invoice.type, invoice.date, invoice.code, invoice.number, invoice.total, invoice.max_shuilv, invoice.tax, output_path.name])
+                        manifest_csv.writerow(
+                            [
+                                invoice.type,
+                                invoice.code,
+                                invoice.number,
+                                invoice.date,
+                                invoice.company,
+                                invoice.price,
+                                invoice.tax,
+                                invoice.max_shuilv,
+                                output_path.name,
+                            ]
+                        )
             manifest.close()
 
         threading.Thread(target=do).start()
@@ -259,7 +279,7 @@ if __name__ == "__main__":
     # 初始化并展示我们的界面组件
     window = MyWidget()
     window.setWindowTitle(QCoreApplication.translate("widget", "发票清单", None))
-    # window.setWindowIcon(QIcon(resource_path("img/invoice.ico")))
+    window.setWindowIcon(QIcon(resource_path("img/invoice.ico")))
     window.show()
 
     # 结束QApplication

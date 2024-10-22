@@ -2,8 +2,6 @@ from PIL import Image
 import pdfplumber
 from pyzbar import pyzbar
 import re
-import pdfminer
-from pdfminer.high_level import extract_text
 
 invoice_types = {
     "04": "增值税普通纸质发票",
@@ -21,7 +19,8 @@ class Invoice:
     amount = None  # 开票金额
     max_shuilv = None
 
-    def __init__(self, qrcode: str, prices: list[str], shuilvs: list[str]):
+    def __init__(self, qrcode: str, prices: list[str], shuilvs: list[str], companys: list[str] = None):
+        self.company = companys[0] if len(companys) >= 0 else None
         res: list[str] = qrcode.split(",")
         self.type = res[1] + (invoice_types[res[1]] if res[1] in invoice_types else "增值税普通电子发票")
         self.code = res[2]
@@ -65,6 +64,8 @@ class Invoice:
         if self.tax is not None:
             res += f"\n税额：¥{self.tax}"
         res += f"\n税率：{self.max_shuilv if self.max_shuilv is not None else 0}%"
+        if self.company is not None:
+            res += f"\n销方名称：{self.company}"
         return res
 
     def __repr__(self):
@@ -77,7 +78,8 @@ def readPDF(file_path: str) -> None | Invoice:
             # 读取PDF文档第i+1页
             page = pdf.pages[i]
             # 解析文字
-            words = re.split(r"\n| |\r", extract_text(file_path))
+            words = re.split(r"\n| |\r", page.extract_text())
+            companys = [re.sub(r"名称[：|:]", "", e) for e in words if "公司" in e and "开户银行" not in e]
             words = [e.strip() for e in words if e]
             shuilvs = [e.replace("%", "") for e in words if e.endswith("%")]
             prices = [e.replace("¥", "").replace("（小写）", "") for e in words if e.startswith("¥")]
@@ -89,9 +91,9 @@ def readPDF(file_path: str) -> None | Invoice:
             if len(barcodes) == 0:
                 return None
             else:
-                print(prices)
+                # print(prices)
                 res = str(barcodes[0].data.decode("utf-8"))
-                invoice = Invoice(qrcode=res, prices=prices, shuilvs=shuilvs)
+                invoice = Invoice(qrcode=res, prices=prices, shuilvs=shuilvs, companys=companys)
                 return invoice
 
 
@@ -102,14 +104,4 @@ def readPDF(file_path: str) -> None | Invoice:
 # owner_name = "李隆欣"
 # for e in Path(base_dir).rglob("*.pdf"):
 #     fapiao = readPDF(e)
-#     if fapiao is not None:
-#         filename = f"{owner_name}_{fapiao.date}_{e.parent.name}_{fapiao.total}.pdf"
-#         num = 1
-#         if Path(output_dir, filename).exists():
-#             while num:
-#                 filename = f"{owner_name}_{fapiao.date}_{e.parent.name}_{fapiao.total}_{num}.pdf"
-#                 if Path(output_dir, filename).exists():
-#                     num += 1
-#                 else:
-#                     break
-#         Path(output_dir, filename).write_bytes(e.read_bytes())
+#     print(fapiao)
