@@ -1,5 +1,10 @@
+import io
+import os
 from PIL import Image
 import pdfplumber
+import pdfplumber.display
+from pdfminer.pdftypes import PDFStream
+from pdfminer.layout import LTImage
 from pyzbar import pyzbar
 import re
 import rmbTrans
@@ -110,24 +115,25 @@ class Invoice:
 
 def readPDF(file_path: str) -> None | Invoice:
     with pdfplumber.open(file_path) as pdf:
-        for i in range(len(pdf.pages)):
-            # 读取PDF文档第i+1页
-            page = pdf.pages[i]
-            # 解析二维码
-            img: Image.Image = page.to_image(width=2000).original
-            barcodes = pyzbar.decode(img, symbols=[pyzbar.ZBarSymbol.QRCODE])
-            if len(barcodes) == 0:
-                return None
-            else:
-                invoice = Invoice(qrcode=str(barcodes[0].data.decode("utf-8")), page_text=page.extract_text())
-                return invoice
+        # 读取PDF文档第1页
+        page = pdf.pages[0]
+        # 分辨率200
+        img: Image.Image = page.to_image(resolution=200).original
+        # 裁剪1/4
+        width, height = img.size
+        img = img.crop((0, 0, width / 4, height / 4))
+        barcodes = pyzbar.decode(img, symbols=[pyzbar.ZBarSymbol.QRCODE])
+        if len(barcodes) == 0:
+            return None
+        else:
+            invoice = Invoice(qrcode=str(barcodes[0].data.decode("utf-8")), page_text=page.extract_text())
+            return invoice
 
 
 if __name__ == "__main__":
     from pathlib import Path
 
     base_dir = "/Users/linorz/workspace/document/发票清单"
-    output_dir = "/Users/linorz/workspace/document/发票清单-重命名"
     owner_name = "李隆欣"
     for e in Path(base_dir).rglob("*.pdf"):
         print(e)
