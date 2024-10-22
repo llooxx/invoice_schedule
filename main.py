@@ -72,17 +72,6 @@ class MyWidget(QMainWindow):
         self.ui.groupBox_shineijiaotong.dropEvent = lambda e: self.groupBox_dropEvent(e, "shineijiaotong")
         self.ui.groupBox_chongdianzhuang.dropEvent = lambda e: self.groupBox_dropEvent(e, "chongdianzhuang")
         self.ui.groupBox_tongxun.dropEvent = lambda e: self.groupBox_dropEvent(e, "tongxun")
-        # 只可读
-        self.ui.lineEdit_code.setReadOnly(True)
-        self.ui.lineEdit_check.setReadOnly(True)
-        self.ui.lineEdit_number.setReadOnly(True)
-        self.ui.lineEdit_date.setReadOnly(True)
-        self.ui.lineEdit_price.setReadOnly(True)
-        self.ui.lineEdit_tax.setReadOnly(True)
-        self.ui.lineEdit_total.setReadOnly(True)
-        self.ui.lineEdit_shuilv.setReadOnly(True)
-        self.ui.lineEdit_type.setReadOnly(True)
-        self.ui.lineEdit_company.setReadOnly(True)
 
         self.all_listWidget = {
             "qiyou": self.ui.listWidget_qiyou,
@@ -132,6 +121,8 @@ class MyWidget(QMainWindow):
         self.ui.btn_shuilv.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_shuilv.text()))
         self.ui.btn_type.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_type.text()))
         self.ui.btn_company.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_company.text()))
+        self.ui.btn_taxpayer_id.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_taxpayer_id.text()))
+
         self.ui.btn_add_qiyou.clicked.connect(lambda: self.btn_add_clicked("qiyou"))
         self.ui.btn_add_shineijiaotong.clicked.connect(lambda: self.btn_add_clicked("shineijiaotong"))
         self.ui.btn_add_chongdianzhuang.clicked.connect(lambda: self.btn_add_clicked("chongdianzhuang"))
@@ -161,6 +152,7 @@ class MyWidget(QMainWindow):
         self.ui.lineEdit_shuilv.clear()
         self.ui.lineEdit_type.clear()
         self.ui.lineEdit_company.clear()
+        self.ui.lineEdit_taxpayer_id.clear()
         file_path = item.data(Qt.ItemDataRole.UserRole)
         invoice = readPDF(file_path)
         if invoice is not None:
@@ -174,7 +166,7 @@ class MyWidget(QMainWindow):
             self.ui.lineEdit_shuilv.setText(f"{invoice.max_shuilv}%" if invoice.max_shuilv is not None else "")
             self.ui.lineEdit_type.setText(invoice.type if invoice.type is not None else "")
             self.ui.lineEdit_company.setText(invoice.company if invoice.company is not None else "")
-
+            self.ui.lineEdit_taxpayer_id.setText(invoice.taxpayer_id if invoice.taxpayer_id is not None else "")
             self.ui.textEdit_show.clear()
             self.ui.textEdit_show.append(f"文件路径：{file_path}\n")
             self.ui.textEdit_show.append(str(invoice))
@@ -235,6 +227,7 @@ class MyWidget(QMainWindow):
                     "发票号码",
                     "发票日期",
                     "销方名称",
+                    "纳税人识别号",
                     "金额",
                     "税额",
                     "税率",
@@ -260,6 +253,7 @@ class MyWidget(QMainWindow):
                                 invoice.number,
                                 invoice.date,
                                 invoice.company,
+                                invoice.taxpayer_id,
                                 invoice.price,
                                 invoice.tax,
                                 invoice.max_shuilv,

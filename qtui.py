@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 715)
+        MainWindow.resize(800, 692)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -236,78 +236,39 @@ class Ui_MainWindow(object):
         self.verticalLayout2.setObjectName(u"verticalLayout2")
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.btn_total = QPushButton(self.centralwidget)
-        self.btn_total.setObjectName(u"btn_total")
-
-        self.gridLayout_2.addWidget(self.btn_total, 5, 0, 1, 1)
-
-        self.lineEdit_number = QLineEdit(self.centralwidget)
-        self.lineEdit_number.setObjectName(u"lineEdit_number")
-
-        self.gridLayout_2.addWidget(self.lineEdit_number, 2, 1, 1, 1)
-
-        self.btn_check = QPushButton(self.centralwidget)
-        self.btn_check.setObjectName(u"btn_check")
-
-        self.gridLayout_2.addWidget(self.btn_check, 4, 0, 1, 1)
-
+        self.gridLayout_2.setHorizontalSpacing(5)
+        self.gridLayout_2.setVerticalSpacing(0)
         self.lineEdit_check = QLineEdit(self.centralwidget)
         self.lineEdit_check.setObjectName(u"lineEdit_check")
+        self.lineEdit_check.setReadOnly(True)
 
         self.gridLayout_2.addWidget(self.lineEdit_check, 4, 1, 1, 1)
-
-        self.btn_number = QPushButton(self.centralwidget)
-        self.btn_number.setObjectName(u"btn_number")
-
-        self.gridLayout_2.addWidget(self.btn_number, 2, 0, 1, 1)
-
-        self.lineEdit_date = QLineEdit(self.centralwidget)
-        self.lineEdit_date.setObjectName(u"lineEdit_date")
-
-        self.gridLayout_2.addWidget(self.lineEdit_date, 3, 1, 1, 1)
-
-        self.lineEdit_type = QLineEdit(self.centralwidget)
-        self.lineEdit_type.setObjectName(u"lineEdit_type")
-
-        self.gridLayout_2.addWidget(self.lineEdit_type, 0, 1, 1, 1)
-
-        self.lineEdit_code = QLineEdit(self.centralwidget)
-        self.lineEdit_code.setObjectName(u"lineEdit_code")
-
-        self.gridLayout_2.addWidget(self.lineEdit_code, 1, 1, 1, 1)
-
-        self.lineEdit_price = QLineEdit(self.centralwidget)
-        self.lineEdit_price.setObjectName(u"lineEdit_price")
-
-        self.gridLayout_2.addWidget(self.lineEdit_price, 6, 1, 1, 1)
 
         self.btn_type = QPushButton(self.centralwidget)
         self.btn_type.setObjectName(u"btn_type")
 
         self.gridLayout_2.addWidget(self.btn_type, 0, 0, 1, 1)
 
+        self.lineEdit_code = QLineEdit(self.centralwidget)
+        self.lineEdit_code.setObjectName(u"lineEdit_code")
+        self.lineEdit_code.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_code, 1, 1, 1, 1)
+
         self.btn_price = QPushButton(self.centralwidget)
         self.btn_price.setObjectName(u"btn_price")
 
         self.gridLayout_2.addWidget(self.btn_price, 6, 0, 1, 1)
 
-        self.lineEdit_total = QLineEdit(self.centralwidget)
-        self.lineEdit_total.setObjectName(u"lineEdit_total")
+        self.lineEdit_taxpayer_id = QLineEdit(self.centralwidget)
+        self.lineEdit_taxpayer_id.setObjectName(u"lineEdit_taxpayer_id")
+        self.lineEdit_taxpayer_id.setReadOnly(True)
 
-        self.gridLayout_2.addWidget(self.lineEdit_total, 5, 1, 1, 1)
-
-        self.lineEdit_tax = QLineEdit(self.centralwidget)
-        self.lineEdit_tax.setObjectName(u"lineEdit_tax")
-
-        self.gridLayout_2.addWidget(self.lineEdit_tax, 7, 1, 1, 1)
-
-        self.btn_code = QPushButton(self.centralwidget)
-        self.btn_code.setObjectName(u"btn_code")
-
-        self.gridLayout_2.addWidget(self.btn_code, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.lineEdit_taxpayer_id, 10, 1, 1, 1)
 
         self.lineEdit_shuilv = QLineEdit(self.centralwidget)
         self.lineEdit_shuilv.setObjectName(u"lineEdit_shuilv")
+        self.lineEdit_shuilv.setReadOnly(True)
 
         self.gridLayout_2.addWidget(self.lineEdit_shuilv, 8, 1, 1, 1)
 
@@ -316,23 +277,86 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.btn_date, 3, 0, 1, 1)
 
-        self.btn_tax = QPushButton(self.centralwidget)
-        self.btn_tax.setObjectName(u"btn_tax")
+        self.btn_company = QPushButton(self.centralwidget)
+        self.btn_company.setObjectName(u"btn_company")
 
-        self.gridLayout_2.addWidget(self.btn_tax, 7, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.btn_company, 9, 0, 1, 1)
+
+        self.lineEdit_number = QLineEdit(self.centralwidget)
+        self.lineEdit_number.setObjectName(u"lineEdit_number")
+        self.lineEdit_number.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_number, 2, 1, 1, 1)
+
+        self.btn_code = QPushButton(self.centralwidget)
+        self.btn_code.setObjectName(u"btn_code")
+
+        self.gridLayout_2.addWidget(self.btn_code, 1, 0, 1, 1)
+
+        self.btn_check = QPushButton(self.centralwidget)
+        self.btn_check.setObjectName(u"btn_check")
+
+        self.gridLayout_2.addWidget(self.btn_check, 4, 0, 1, 1)
+
+        self.lineEdit_price = QLineEdit(self.centralwidget)
+        self.lineEdit_price.setObjectName(u"lineEdit_price")
+        self.lineEdit_price.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_price, 6, 1, 1, 1)
+
+        self.lineEdit_type = QLineEdit(self.centralwidget)
+        self.lineEdit_type.setObjectName(u"lineEdit_type")
+        self.lineEdit_type.setEnabled(True)
+        self.lineEdit_type.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_type, 0, 1, 1, 1)
+
+        self.lineEdit_date = QLineEdit(self.centralwidget)
+        self.lineEdit_date.setObjectName(u"lineEdit_date")
+        self.lineEdit_date.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_date, 3, 1, 1, 1)
+
+        self.btn_taxpayer_id = QPushButton(self.centralwidget)
+        self.btn_taxpayer_id.setObjectName(u"btn_taxpayer_id")
+
+        self.gridLayout_2.addWidget(self.btn_taxpayer_id, 10, 0, 1, 1)
+
+        self.btn_number = QPushButton(self.centralwidget)
+        self.btn_number.setObjectName(u"btn_number")
+
+        self.gridLayout_2.addWidget(self.btn_number, 2, 0, 1, 1)
 
         self.btn_shuilv = QPushButton(self.centralwidget)
         self.btn_shuilv.setObjectName(u"btn_shuilv")
 
         self.gridLayout_2.addWidget(self.btn_shuilv, 8, 0, 1, 1)
 
-        self.btn_company = QPushButton(self.centralwidget)
-        self.btn_company.setObjectName(u"btn_company")
+        self.btn_total = QPushButton(self.centralwidget)
+        self.btn_total.setObjectName(u"btn_total")
 
-        self.gridLayout_2.addWidget(self.btn_company, 9, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.btn_total, 5, 0, 1, 1)
+
+        self.lineEdit_tax = QLineEdit(self.centralwidget)
+        self.lineEdit_tax.setObjectName(u"lineEdit_tax")
+        self.lineEdit_tax.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_tax, 7, 1, 1, 1)
+
+        self.lineEdit_total = QLineEdit(self.centralwidget)
+        self.lineEdit_total.setObjectName(u"lineEdit_total")
+        self.lineEdit_total.setReadOnly(True)
+
+        self.gridLayout_2.addWidget(self.lineEdit_total, 5, 1, 1, 1)
+
+        self.btn_tax = QPushButton(self.centralwidget)
+        self.btn_tax.setObjectName(u"btn_tax")
+
+        self.gridLayout_2.addWidget(self.btn_tax, 7, 0, 1, 1)
 
         self.lineEdit_company = QLineEdit(self.centralwidget)
         self.lineEdit_company.setObjectName(u"lineEdit_company")
+        self.lineEdit_company.setReadOnly(True)
 
         self.gridLayout_2.addWidget(self.lineEdit_company, 9, 1, 1, 1)
 
@@ -348,7 +372,7 @@ class Ui_MainWindow(object):
         self.textEdit_show.setObjectName(u"textEdit_show")
         sizePolicy.setHeightForWidth(self.textEdit_show.sizePolicy().hasHeightForWidth())
         self.textEdit_show.setSizePolicy(sizePolicy)
-        self.textEdit_show.setMinimumSize(QSize(300, 200))
+        self.textEdit_show.setMinimumSize(QSize(300, 150))
 
         self.verticalLayout2.addWidget(self.textEdit_show)
 
@@ -394,16 +418,17 @@ class Ui_MainWindow(object):
         self.btn_clear.setText(QCoreApplication.translate("MainWindow", u"\u6e05\u7a7a", None))
         self.btn_export_table.setText(QCoreApplication.translate("MainWindow", u"\u751f\u6210\u6e05\u5355", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968pdf\u62d6\u5165\u5bf9\u5e94\u6846\u65b0\u589e\uff0c\u53cc\u51fb\u6587\u4ef6\u540d\u5220\u9664", None))
-        self.btn_total.setText(QCoreApplication.translate("MainWindow", u"\u4ef7\u7a0e\u5408\u8ba1", None))
-        self.btn_check.setText(QCoreApplication.translate("MainWindow", u"\u6821\u9a8c\u7801", None))
-        self.btn_number.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968\u53f7\u7801", None))
         self.btn_type.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968\u7c7b\u578b", None))
         self.btn_price.setText(QCoreApplication.translate("MainWindow", u"\u91d1\u989d", None))
-        self.btn_code.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968\u4ee3\u7801", None))
         self.btn_date.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u7968\u65e5\u671f", None))
-        self.btn_tax.setText(QCoreApplication.translate("MainWindow", u"\u7a0e\u989d", None))
-        self.btn_shuilv.setText(QCoreApplication.translate("MainWindow", u"\u7a0e\u7387", None))
         self.btn_company.setText(QCoreApplication.translate("MainWindow", u"\u9500\u65b9\u540d\u79f0", None))
+        self.btn_code.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968\u4ee3\u7801", None))
+        self.btn_check.setText(QCoreApplication.translate("MainWindow", u"\u6821\u9a8c\u7801", None))
+        self.btn_taxpayer_id.setText(QCoreApplication.translate("MainWindow", u"\u7eb3\u7a0e\u4eba\u8bc6\u522b\u53f7", None))
+        self.btn_number.setText(QCoreApplication.translate("MainWindow", u"\u53d1\u7968\u53f7\u7801", None))
+        self.btn_shuilv.setText(QCoreApplication.translate("MainWindow", u"\u7a0e\u7387", None))
+        self.btn_total.setText(QCoreApplication.translate("MainWindow", u"\u4ef7\u7a0e\u5408\u8ba1", None))
+        self.btn_tax.setText(QCoreApplication.translate("MainWindow", u"\u7a0e\u989d", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u70b9\u51fb\u5bf9\u5e94\u6309\u94ae\u53ef\u590d\u5236\u5230\u526a\u5207\u677f", None))
         self.btn_web_check.setText(QCoreApplication.translate("MainWindow", u"\u7f51\u9875\u67e5\u9a8c", None))
     # retranslateUi

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>715</height>
+    <height>692</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -350,49 +350,30 @@
      <layout class="QVBoxLayout" name="verticalLayout2">
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="5" column="0">
-         <widget class="QPushButton" name="btn_total">
-          <property name="text">
-           <string>价税合计</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="lineEdit_number"/>
-        </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="btn_check">
-          <property name="text">
-           <string>校验码</string>
-          </property>
-         </widget>
-        </item>
+        <property name="horizontalSpacing">
+         <number>5</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>0</number>
+        </property>
         <item row="4" column="1">
-         <widget class="QLineEdit" name="lineEdit_check"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="btn_number">
-          <property name="text">
-           <string>发票号码</string>
+         <widget class="QLineEdit" name="lineEdit_check">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="lineEdit_date"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="lineEdit_type"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="lineEdit_code"/>
-        </item>
-        <item row="6" column="1">
-         <widget class="QLineEdit" name="lineEdit_price"/>
         </item>
         <item row="0" column="0">
          <widget class="QPushButton" name="btn_type">
           <property name="text">
            <string>发票类型</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_code">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -403,40 +384,24 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="lineEdit_total"/>
-        </item>
-        <item row="7" column="1">
-         <widget class="QLineEdit" name="lineEdit_tax"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="btn_code">
-          <property name="text">
-           <string>发票代码</string>
+        <item row="10" column="1">
+         <widget class="QLineEdit" name="lineEdit_taxpayer_id">
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QLineEdit" name="lineEdit_shuilv"/>
+         <widget class="QLineEdit" name="lineEdit_shuilv">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="3" column="0">
          <widget class="QPushButton" name="btn_date">
           <property name="text">
            <string>开票日期</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QPushButton" name="btn_tax">
-          <property name="text">
-           <string>税额</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QPushButton" name="btn_shuilv">
-          <property name="text">
-           <string>税率</string>
           </property>
          </widget>
         </item>
@@ -447,8 +412,106 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_number">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="btn_code">
+          <property name="text">
+           <string>发票代码</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="btn_check">
+          <property name="text">
+           <string>校验码</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="lineEdit_price">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineEdit_type">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="lineEdit_date">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="0">
+         <widget class="QPushButton" name="btn_taxpayer_id">
+          <property name="text">
+           <string>纳税人识别号</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="btn_number">
+          <property name="text">
+           <string>发票号码</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QPushButton" name="btn_shuilv">
+          <property name="text">
+           <string>税率</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="btn_total">
+          <property name="text">
+           <string>价税合计</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLineEdit" name="lineEdit_tax">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="lineEdit_total">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QPushButton" name="btn_tax">
+          <property name="text">
+           <string>税额</string>
+          </property>
+         </widget>
+        </item>
         <item row="9" column="1">
-         <widget class="QLineEdit" name="lineEdit_company"/>
+         <widget class="QLineEdit" name="lineEdit_company">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -470,7 +533,7 @@
         <property name="minimumSize">
          <size>
           <width>300</width>
-          <height>200</height>
+          <height>150</height>
          </size>
         </property>
        </widget>
