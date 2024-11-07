@@ -11,8 +11,9 @@ from urllib.parse import urlparse
 # 任何一个PySide界面程序都需要使用QApplication
 # 我们要展示一个普通的窗口，所以需要导入QWidget，用来让我们自己的类继承
 from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QPushButton, QListWidgetItem, QFileDialog
-from PySide6.QtGui import QDragEnterEvent, QIcon
+from PySide6.QtGui import QDragEnterEvent, QIcon, QPixmap
 from PySide6.QtCore import Qt, QCoreApplication
+from PIL import Image, ImageQt
 
 # 导入我们生成的界面
 from qtui import Ui_MainWindow
@@ -113,16 +114,12 @@ class MyWidget(QMainWindow):
         self.all_listWidget["shineijiaotong"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "shineijiaotong"))
         self.all_listWidget["chongdianzhuang"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "chongdianzhuang"))
         self.all_listWidget["tongxun"].currentItemChanged.connect(lambda item: self.handleClickedItem(item, "tongxun"))
-        # 列表item双击删除
-        self.all_listWidget["qiyou"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "qiyou"))
-        self.all_listWidget["shineijiaotong"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "shineijiaotong"))
-        self.all_listWidget["chongdianzhuang"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "chongdianzhuang"))
-        self.all_listWidget["tongxun"].itemDoubleClicked.connect(lambda item: self.handleDoubleClickedItem(item, "tongxun"))
         # 按钮
         self.ui.btn_clear.clicked.connect(self.btn_clear_clicked)
         self.ui.btn_export_table.clicked.connect(self.export_table)
         self.ui.btn_web_check.clicked.connect(lambda: webbrowser.open("https://inv-veri.chinatax.gov.cn"))
         self.ui.btn_check.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_check.text()))
+        self.ui.btn_check6.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_check6.text()))
         self.ui.btn_code.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_code.text()))
         self.ui.btn_number.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_number.text()))
         self.ui.btn_date.clicked.connect(lambda: QApplication.clipboard().setText(self.ui.lineEdit_date.text()))
@@ -138,6 +135,11 @@ class MyWidget(QMainWindow):
         self.ui.btn_add_shineijiaotong.clicked.connect(lambda: self.btn_add_clicked("shineijiaotong"))
         self.ui.btn_add_chongdianzhuang.clicked.connect(lambda: self.btn_add_clicked("chongdianzhuang"))
         self.ui.btn_add_tongxun.clicked.connect(lambda: self.btn_add_clicked("tongxun"))
+
+        self.ui.btn_del_qiyou.clicked.connect(lambda: self.deleteItem("qiyou"))
+        self.ui.btn_del_shineijiaotong.clicked.connect(lambda: self.deleteItem("shineijiaotong"))
+        self.ui.btn_del_chongdianzhuang.clicked.connect(lambda: self.deleteItem("chongdianzhuang"))
+        self.ui.btn_del_tongxun.clicked.connect(lambda: self.deleteItem("tongxun"))
 
     def btn_add_clicked(self, type: str):
         # 设置文件过滤器，允许选择 PDF 文件
@@ -155,6 +157,7 @@ class MyWidget(QMainWindow):
     def handleClickedItem(self, item: QListWidgetItem, type: str):
         self.ui.lineEdit_code.clear()
         self.ui.lineEdit_check.clear()
+        self.ui.lineEdit_check6.clear()
         self.ui.lineEdit_number.clear()
         self.ui.lineEdit_date.clear()
         self.ui.lineEdit_price.clear()
@@ -169,6 +172,7 @@ class MyWidget(QMainWindow):
         if invoice is not None:
             self.ui.lineEdit_code.setText(invoice.code if invoice.code is not None else "")
             self.ui.lineEdit_check.setText(invoice.check if invoice.check is not None else "")
+            self.ui.lineEdit_check6.setText(invoice.check[-6:] if invoice.check is not None else "")
             self.ui.lineEdit_number.setText(invoice.number if invoice.number is not None else "")
             self.ui.lineEdit_date.setText(invoice.date if invoice.date is not None else "")
             self.ui.lineEdit_price.setText(invoice.price if invoice.price is not None else "")
@@ -182,7 +186,9 @@ class MyWidget(QMainWindow):
             self.ui.textEdit_show.append(f"文件路径：{file_path}\n")
             self.ui.textEdit_show.append(str(invoice))
 
-    def handleDoubleClickedItem(self, item: QListWidgetItem, type: str):
+            self.loadImage(invoice.img)
+
+    def deleteItem(self, type: str):
         choose_listWidget = self.all_listWidget[type]
         choose_listWidget.takeItem(choose_listWidget.currentRow())
         self.all_count_label[type]["count"] -= 1
@@ -274,6 +280,18 @@ class MyWidget(QMainWindow):
             manifest.close()
 
         threading.Thread(target=do).start()
+
+    def loadImage(self, img: Image.Image):
+        # 将PIL Image转换为QImage
+        qimage = ImageQt.toqimage(img)
+        # 将QImage转换为QPixmap
+        pixmap = QPixmap.fromImage(qimage)
+        # 确保图片加载成功
+        if not pixmap.isNull():
+            # 设置QLabel的图片
+            self.ui.img_label.setPixmap(pixmap)
+        else:
+            print(f"Failed to load image")
 
 
 # 程序入口

@@ -1,10 +1,7 @@
-import io
-import os
+import datetime
 from PIL import Image
 import pdfplumber
 import pdfplumber.display
-from pdfminer.pdftypes import PDFStream
-from pdfminer.layout import LTImage
 from pyzbar import pyzbar
 import re
 import rmbTrans
@@ -15,7 +12,19 @@ invoice_types = {
     "01": "增值税专用发票",
     "11": "增值税卷票",
 }
-zh_daxie = ["⊗", "零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "佰", "仟", "萬", "亿", "圆", "角", "分", "正", "整"]
+zh_daxie = "⊗零壹贰叁肆伍陆柒捌玖拾佰仟萬亿圆角分正整"
+
+
+def is_valid_date(date_str: str) -> bool:
+    if len(date_str) != 8:
+        return False
+    try:
+        # 尝试按照 YYYYMMDD 的格式解析日期字符串
+        datetime.datetime.strptime(date_str, "%Y%m%d")
+        return True
+    except ValueError:
+        # 如果解析失败，返回 False
+        return False
 
 
 class Invoice:
@@ -31,6 +40,7 @@ class Invoice:
     type = None  # 发票类型
     check = None  # 发票校验码
     taxpayer_id = None  # 纳税人识别号
+    img: Image.Image | None = None
 
     def __init__(self, qrcode: str, page_text: str):
         # 二维码
@@ -46,11 +56,20 @@ class Invoice:
         words = re.split(r"\n| |\r", page_text)
         words = [e.strip() for e in words if e]
         # 纳税人识别号
-        re_taxpayer_id = re.search(r"[0-9a-zA-Z]{18}", page_text)
-        self.taxpayer_id = re_taxpayer_id.group() if re_taxpayer_id else None
+        re_taxpayer_id = re.findall(r"[0-9a-zA-Z]{18}", page_text)
+        if len(re_taxpayer_id) == 1:
+            self.taxpayer_id = re_taxpayer_id[0]
+        elif len(re_taxpayer_id) > 1:  # 有多个的时候判断中间是否有日期，有日期的位身份证，跳过
+            for e in re_taxpayer_id:
+                if is_valid_date(e[6:14]):
+                    continue
+                self.taxpayer_id = e
         # 销方名称
-        companys = [re.sub(r"名称[：|:]", "", e) for e in words if "公司" in e and "开户银行" not in e]
+        companys = [e for e in words if "公司" in e and "开户" not in e]
         self.company = companys[0] if len(companys) >= 0 else None
+        if re.search(r"[：|:]", self.company):
+            self.company = re.split(r"[：|:]", self.company)[1].strip()
+
         # 税率
         shuilvs = [e.replace("%", "") for e in words if e.endswith("%")]
         shuilvs = [int(e) for e in shuilvs if e]
@@ -121,12 +140,12 @@ def readPDF(file_path: str) -> None | Invoice:
         img: Image.Image = page.to_image(resolution=200).original
         # 裁剪1/4
         width, height = img.size
-        img = img.crop((0, 0, width / 4, height / 4))
-        barcodes = pyzbar.decode(img, symbols=[pyzbar.ZBarSymbol.QRCODE])
+        barcodes = pyzbar.decode(img.crop((0, 0, width / 4, height / 4)), symbols=[pyzbar.ZBarSymbol.QRCODE])
         if len(barcodes) == 0:
             return None
         else:
             invoice = Invoice(qrcode=str(barcodes[0].data.decode("utf-8")), page_text=page.extract_text())
+            invoice.img = img
             return invoice
 
 
@@ -134,6 +153,7 @@ if __name__ == "__main__":
     from pathlib import Path
 
     base_dir = "/Users/linorz/workspace/document/发票清单"
+    # base_dir = "/Users/linorz/workspace/document/11月发票/发票清单/"
     owner_name = "李隆欣"
     for e in Path(base_dir).rglob("*.pdf"):
         print(e)
